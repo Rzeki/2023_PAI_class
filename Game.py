@@ -1,6 +1,7 @@
 import pygame as pg
 from Gamer import Player
 
+
 class Game:
     def __init__(self) -> None:
         pg.init()
@@ -17,20 +18,23 @@ class Game:
                     
             keys = pg.key.get_pressed()
             if keys[pg.K_w]:
-                self.player.direction.x = 1
+                # try:
+                #     self.player.velocity = pg.Vector2.normalize(self.player.direction) * self.player.speed
+                # except ValueError:
+                self.player.velocity += self.player.direction * self.player.speed
             if keys[pg.K_s]:
-                self.player.direction.x = 0
+                self.player.velocity = pg.Vector2(0,0)
             if keys[pg.K_a]:
-                self.player.direction.rotate_ip(-0.1)
-                self.player.body = pg.transform.rotate(self.player.body, -1)
+                self.player.direction.rotate_ip(-0.3)
+                # self.player.velocity.rotate_ip(-0.1)
             if keys[pg.K_d]:
-                self.player.direction.rotate_ip(0.1)
-                self.player.body = pg.transform.rotate(self.player.body, 1)
+                self.player.direction.rotate_ip(0.3)
+                # self.player.velocity.rotate_ip(0.1)
                     
            
                     
             self.window.fill(pg.Color(0,0,0))       
-            self.player.draw()
+            self.player.draw(self.window)
             self.player.move()
             
                     
