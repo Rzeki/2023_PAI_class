@@ -20,9 +20,6 @@ class Game:
 
             keys = pg.key.get_pressed()
             if keys[pg.K_w]:
-                # try:
-                #     self.player.velocity = pg.Vector2.normalize(self.player.direction) * self.player.speed
-                # except ValueError:
                 self.player.velocity += pg.Vector2.normalize(self.player.direction) * self.player.speed * dt
             if keys[pg.K_s]:
                 self.player.velocity = pg.Vector2(0,0)
