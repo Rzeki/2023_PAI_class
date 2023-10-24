@@ -25,7 +25,7 @@ class GameObject:
         # self.velocity = direction * self.speed
         self.position += self.velocity * dt
     
-    def check_boundaries(self, window : pg.Surface) -> bool :
+    def check_boundaries(self, window : pg.Surface) -> bool : #TO PLAYER CLASS
         '''Checks screen bounds and bounces object.'''
         wdth, hgth = window.get_size()
 
