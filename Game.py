@@ -1,6 +1,7 @@
 import pygame as pg
 from Player import Player
 from Wall import Wall
+from Enemy import Enemy
 
 
 class Game:
@@ -8,17 +9,18 @@ class Game:
         pg.init()
         self.running : bool = True
         self.window : pg.Surface = pg.display.set_mode((1200, 900))
-        self.player = Player()
+        self.player = Player(self.window)
         self.clock = pg.time.Clock()
         self.walls = []
         self.walls = [
-            Wall(500, 200, 50),
-            Wall(150, 100, 30),
-            Wall(900, 600, 70),
-            Wall(1000, 300, 50)
+            Wall(self.window, 500, 200, 50),
+            Wall(self.window, 150, 100, 30),
+            Wall(self.window, 900, 600, 70),
+            Wall(self.window, 1000, 300, 50)
         ]
         
     def run(self) -> None:
+        enemy = Enemy(self.window, self.walls, self.player)
         while self.running:
             dt : int = self.clock.tick(90)
             
@@ -41,17 +43,19 @@ class Game:
             #===================DRAWING=============================        
             self.window.fill(pg.Color(0,0,0)) # BACKGROUND
             for wall in self.walls:
-                wall.draw(self.window)
-            self.player.draw(self.window)
+                wall.draw()
+            self.player.draw()
+            enemy.draw()
             
             #===================COLLISION===========================
-            self.player.check_boundaries(self.window)
+            self.player.check_boundaries()
             for wall in self.walls:
                 self.player.collide(wall)
             
             
             #===================MOVEMENT============================
             self.player.move(dt)
+            enemy.update(dt)
             
             
                     
