@@ -6,7 +6,7 @@ import util
 
 class Enemy(GameObject):
     
-    def __init__(self, window : pg.Surface, obstacles : list, player : GameObject) -> None:
+    def __init__(self, window : pg.Surface, obstacles : list, walls : list, player : GameObject) -> None:
         super().__init__(window)
         self.mass = 500
         self.radius = 20
@@ -14,6 +14,7 @@ class Enemy(GameObject):
         self.direction = Vec2(util.dir["UP"])
         self.side = Vec2(util.dir["RIGHT"])
         self.obstacles = obstacles
+        self.walls = walls
         self.steering = SteeringBehaviors(self, player)
     
     def update(self, dt : float) -> None:

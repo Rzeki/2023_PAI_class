@@ -1,6 +1,6 @@
 import pygame as pg
 from Player import Player
-from Wall import Wall
+from Obstacles import *
 from Enemy import Enemy
 
 
@@ -11,16 +11,21 @@ class Game:
         self.window : pg.Surface = pg.display.set_mode((1200, 900))
         self.player = Player(self.window)
         self.clock = pg.time.Clock()
-        self.walls = []
+        self.obstacles = [
+            Obstacle(self.window, 500, 200, 50),
+            Obstacle(self.window, 150, 100, 30),
+            Obstacle(self.window, 900, 600, 70),
+            Obstacle(self.window, 1000, 300, 50)
+        ]
         self.walls = [
-            Wall(self.window, 500, 200, 50),
-            Wall(self.window, 150, 100, 30),
-            Wall(self.window, 900, 600, 70),
-            Wall(self.window, 1000, 300, 50)
+            Wall(self.window, Vec2(0, 0), Vec2(self.window.get_size()[0], 0)),
+            Wall(self.window, Vec2(self.window.get_size()[0], 0), Vec2(self.window.get_size()[0], self.window.get_size()[1])),
+            Wall(self.window, Vec2(self.window.get_size()[0], self.window.get_size()[1]), Vec2(0, self.window.get_size()[1])),
+            Wall(self.window, Vec2(0, self.window.get_size()[1]), Vec2(0, 0))
         ]
         
     def run(self) -> None:
-        enemy = Enemy(self.window, self.walls, self.player)
+        enemy = Enemy(self.window, self.obstacles, self.walls, self.player)
         while self.running:
             dt : int = self.clock.tick(90)
             
@@ -42,6 +47,8 @@ class Game:
                     
             #===================DRAWING=============================        
             self.window.fill(pg.Color(0,0,0)) # BACKGROUND
+            for obst in self.obstacles:
+                obst.draw()
             for wall in self.walls:
                 wall.draw()
             self.player.draw()
@@ -49,8 +56,8 @@ class Game:
             
             #===================COLLISION===========================
             self.player.check_boundaries()
-            for wall in self.walls:
-                self.player.collide(wall)
+            for obst in self.obstacles:
+                self.player.collide(obst)
             
             
             #===================MOVEMENT============================

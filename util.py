@@ -58,17 +58,17 @@ def vec_to_world_space(vec : Vec2, agent_dir : Vec2, agent_side : Vec2) -> Vec2:
     # side.x    side.y    0
     # 0         0         1
 
-def line_intersect(A : Vec2, B : Vec2, C : Vec2, D : Vec2) -> bool:
+def line_intersect(A : Vec2, B : Vec2, C : Vec2, D : Vec2) -> (bool, float, Vec2):
     rTop : float = (A.y-C.y)*(D.x-C.x)-(A.x-C.x)*(D.y-C.y)
+    rBot : float = (B.x-A.x)*(D.y-C.y)-(B.y-A.y)*(D.x-C.x)
     sTop : float = (A.y-C.y)*(B.x-A.x)-(A.x-C.x)*(B.y-A.y)
-    bot : float = (B.x-A.x)*(D.y-C.y)-(B.y-A.y)*(D.x-C.x)
+    sBot : float = (B.x-A.x)*(D.y-C.y)-(B.y-A.y)*(D.x-C.x)
     
-    if bot == 0:
-        return False
+    if rBot == 0 or sBot == 0:
+        return False, None, None
 
-    r, s = rTop/bot, sTop/bot
+    r, s = rTop/rBot, sTop/sBot
     
     if r>0 and r<1 and s>0 and s<1:
-        return True
-    
-    return False
+        return True, Vec2.distance_to(A, B)*r, A+r*(B-A)
+    else: return False, 0, None

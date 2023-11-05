@@ -19,12 +19,11 @@ class SteeringBehaviors:
     
         self.min_detection_box_len : float = 40.0
         
-        self.walls : [] = [Vec2(util.dir["UP"]), Vec2(util.dir["DOWN"]), Vec2(util.dir["LEFT"]), Vec2(util.dir["RIGHT"]), ]
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
         self.feeler_length : float = 50
     
     def calculate(self) -> Vec2:
-        return self.wander() + self.avoid_obstacles() + self.evade(self.player)
+        return self.wander() + self.avoid_obstacles() + self.avoid_walls()
 
     def forward_comp(self) -> Vec2:
         pass
@@ -138,11 +137,26 @@ class SteeringBehaviors:
         self.agent_feelers[1] = self.agent.position + self.feeler_length/2*self.agent.direction.rotate(math.pi/2*3.5)
         self.agent_feelers[1] = self.agent.position + self.feeler_length/2*self.agent.direction.rotate(math.pi/2*0.5)
         
-        dist_to_this_wall : float = 0.0
         dist_to_closest_wall : float = 99999
-        
-        closest_wall : int = -1
+        closest_wall : GameObject = None
+        closest_intersect_point : Vec2 = None
+        steering_force : Vec2 = Vec2(0, 0)
         
         for feeler in self.agent_feelers:
-            for wall in self.walls:
-                pass
+            for wall in self.agent.walls:
+                intersect, dist, point = util.line_intersect(self.agent.position, feeler, wall.start, wall.end)
+                if intersect:
+                    if dist and point and dist < dist_to_closest_wall:
+                        dist_to_closest_wall = dist
+                        closest_wall = wall
+                        closest_intersect_point = point
+        
+            if closest_wall:
+                overshoot : Vec2 = feeler - closest_intersect_point
+                steering_force = closest_wall.normal * overshoot.length()
+        
+        return steering_force
+            
+                        
+                        
+                        
