@@ -1,14 +1,14 @@
 import pygame as pg
-from GameObject import GameObject
 from pygame import Vector2 as Vec2
+from GameObject import *
 import util
 import math
 
 class SteeringBehaviors:
     
-    def __init__(self, agent : GameObject, player : GameObject) -> None:
-        self.agent : GameObject = agent
-        self.player : GameObject = player
+    def __init__(self, agent : MovingObject, player : MovingObject) -> None:
+        self.agent : MovingObject = agent
+        self.player : MovingObject = player
         
         self.panic_distance : float = 150
         
@@ -165,7 +165,7 @@ class SteeringBehaviors:
             return (new_velocity - self.agent.velocity)
         else: return Vec2(0,0)
     
-    def pursuit(self, evader : GameObject) -> Vec2:
+    def pursuit(self, evader : MovingObject) -> Vec2:
         '''Pursuit target object.'''
         to_evader = evader.position - self.agent.position
         relative_heading = self.agent.direction.dot(evader.direction)
@@ -176,7 +176,7 @@ class SteeringBehaviors:
             look_ahead_time : float = to_evader.length()/(self.agent.max_speed+evader.speed)
             return self.seek(evader.position + evader.velocity*look_ahead_time)
     
-    def evade(self, pursuer : GameObject) -> Vec2 :
+    def evade(self, pursuer : MovingObject) -> Vec2 :
         '''Evade target object'''
         to_pursuer = pursuer.position - self.agent.position
         look_ahead_time : float = to_pursuer.length()/(self.agent.max_speed+pursuer.speed)
@@ -195,7 +195,7 @@ class SteeringBehaviors:
     def avoid_obstacles(self) -> Vec2:
         box_length : float = self.min_detection_box_len + (self.agent.speed/self.agent.max_speed)*self.min_detection_box_len
         
-        for obstacle in self.agent.obstacles:
+        for obstacle in self.agent.game_world.obstacles:
             obstacle.tag = False
             range : Vec2 = obstacle.position - self.agent.position
             radius = box_length + obstacle.radius
@@ -205,7 +205,7 @@ class SteeringBehaviors:
         closest_obstacle : GameObject = None
         dist_to_co : float = 99999
         co_in_local : Vec2 = None
-        for obstacle in self.agent.obstacles:
+        for obstacle in self.agent.game_world.obstacles:
             if obstacle.tag:
                 local_pos : Vec2 = util.point_to_local_space(obstacle.position, self.agent.direction, self.agent.side, self.agent.position)
                 if local_pos.x >= 0:
@@ -243,7 +243,7 @@ class SteeringBehaviors:
         steering_force : Vec2 = Vec2(0, 0)
         
         for feeler in self.agent_feelers:
-            for wall in self.agent.walls:
+            for wall in self.agent.game_world.walls:
                 intersect, dist, point = util.line_intersect(self.agent.position, feeler, wall.start, wall.end)
                 if intersect:
                     if dist and point and dist < dist_to_closest_wall:

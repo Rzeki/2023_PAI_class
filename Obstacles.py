@@ -1,6 +1,6 @@
 import pygame as pg
-from GameObject import GameObject
 from pygame import Vector2 as Vec2
+from GameObject import GameObject
 import util
 
 class Obstacle(GameObject):
@@ -17,6 +17,9 @@ class Obstacle(GameObject):
 class Wall(GameObject):
     def __init__(self, window: pg.Surface, start : Vec2, end : Vec2) -> None:
         super().__init__(window)
+        self.position = start
+        self.radius = 0
+        
         self.start : Vec2 = start
         self.end : Vec2 =  end
         self.normal : Vec2 = self.calc_normal()

@@ -1,9 +1,9 @@
 import pygame as pg
-from GameObject import GameObject
+from GameObject import *
 from pygame import Vector2 as Vec2
 import util
 
-class Player(GameObject):
+class Player(MovingObject):
     def __init__(self, window : pg.Surface) -> None:
         super().__init__(window)
         self.position = pg.Vector2([ z / 2 for z in self.window.get_size() ])
