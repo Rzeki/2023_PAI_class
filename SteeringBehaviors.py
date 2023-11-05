@@ -18,9 +18,13 @@ class SteeringBehaviors:
         self.wander_target : Vec2 = Vec2(self.wander_radius*math.cos(math.pi*2), self.wander_radius*math.sin(math.pi*2))
     
         self.min_detection_box_len : float = 40.0
+        
+        self.walls : [] = [Vec2(util.dir["UP"]), Vec2(util.dir["DOWN"]), Vec2(util.dir["LEFT"]), Vec2(util.dir["RIGHT"]), ]
+        self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
+        self.feeler_length : float = 50
     
     def calculate(self) -> Vec2:
-        return self.wander()
+        return self.wander() + self.avoid_obstacles() + self.evade(self.player)
 
     def forward_comp(self) -> Vec2:
         pass
@@ -92,4 +96,53 @@ class SteeringBehaviors:
     def avoid_obstacles(self) -> Vec2:
         box_length : float = self.min_detection_box_len + (self.agent.speed/self.agent.max_speed)*self.min_detection_box_len
         
+        for obstacle in self.agent.obstacles:
+            obstacle.tag = False
+            range : Vec2 = obstacle.position - self.agent.position
+            radius = box_length + obstacle.radius
+            if range.length_squared() < radius*radius:
+                obstacle.tag = True
         
+        closest_obstacle : GameObject = None
+        dist_to_co : float = 99999
+        co_in_local : Vec2 = None
+        for obstacle in self.agent.obstacles:
+            if obstacle.tag:
+                local_pos : Vec2 = util.point_to_local_space(obstacle.position, self.agent.direction, self.agent.side, self.agent.position)
+                if local_pos.x >= 0:
+                    expanded_rad : float = obstacle.radius + self.agent.radius
+                    if abs(local_pos.y) < expanded_rad:
+                        cX, cY = local_pos.x, local_pos.y
+                        sqrt_part = math.sqrt(expanded_rad*expanded_rad - cY*cY)
+                        ip : float = cX - sqrt_part
+                        if ip <= 0.0:
+                            ip = cX +sqrt_part
+                        
+                        if ip < dist_to_co:
+                            dist_to_co = ip
+                            closest_obstacle = obstacle
+                            co_in_local = local_pos
+        steering_force : Vec2 = None
+        if closest_obstacle:
+            multiplier : float = 1.0 + (box_length - co_in_local.x)/box_length
+            breaking_weight : float = 2.0
+            steering_force = Vec2(
+                (closest_obstacle.radius - co_in_local.x)*breaking_weight,
+                (closest_obstacle.radius - co_in_local.y)*multiplier
+            )
+            return util.vec_to_world_space(steering_force, self.agent.direction, self.agent.side)
+        else: return Vec2(0.0, 0.0)
+    
+    def avoid_walls(self) -> Vec2:
+        self.agent_feelers[0] = self.agent.position + self.feeler_length*self.agent.direction
+        self.agent_feelers[1] = self.agent.position + self.feeler_length/2*self.agent.direction.rotate(math.pi/2*3.5)
+        self.agent_feelers[1] = self.agent.position + self.feeler_length/2*self.agent.direction.rotate(math.pi/2*0.5)
+        
+        dist_to_this_wall : float = 0.0
+        dist_to_closest_wall : float = 99999
+        
+        closest_wall : int = -1
+        
+        for feeler in self.agent_feelers:
+            for wall in self.walls:
+                pass

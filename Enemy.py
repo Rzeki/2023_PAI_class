@@ -30,9 +30,9 @@ class Enemy(GameObject):
             self.direction = self.velocity.normalize()
             self.side = util.vec_perp(self.direction)
         
-        # wdth, hgth = self.window.get_size()
-        # util.wrap_around(self.position, wdth, hgth)
-        self.check_boundaries()
+        wdth, hgth = self.window.get_size()
+        util.wrap_around(self.position, wdth, hgth)
+        # self.check_boundaries()
         #probably add check_boundaries  here too
     
     def draw(self) -> None:
