@@ -20,24 +20,124 @@ class SteeringBehaviors:
         self.min_detection_box_len : float = 40.0
         
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 50
+        self.feeler_length : float = 40
+        
+        self.neighborhood_dist : float = 50
+        
+        self.steering_force : Vec2 = Vec2(0, 0)
+        
+        self.behaviors : dict = {
+            "seek" : False, 
+            "flee" : False, 
+            "arrive" : False,
+            "pursuit" : False,
+            "evade" : False,
+            "wander" : False,
+            "avoid obstacles" : False,
+            "avoid walls" : False
+            }
+        self.seek_weight : float = 1
+        self.flee_weight : float = 1
+        self.arrive_weight : float = 1
+        self.pursuit_weight : float = 1
+        self.evade_weight : float = 00.1
+        self.wander_weight : float = 1
+        self.avoid_obst_weight : float = 10
+        self.avoid_walls_weight : float = 10
+        # self.separation_weight : float = 1
+        # self.alignment_weight : float = 1
+        # self.cohesion_weight : float = 2
+        # self.interpose_weight : float = 1
+        # self.hide_weight : float = 1
     
+    #by the book but doesn't work
+    #TODO: fix by tweaking params here and in enemy.py idk
+    # def calculate(self) -> Vec2:
+    #     self.steering_force = Vec2(0,0)
+        
+    #     if self.behaviors["avoid walls"]:
+    #         force : Vec2 = self.avoid_walls()*self.avoid_walls_weight
+    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     if self.behaviors["avoid obstacles"]:
+    #         force : Vec2 = self.avoid_obstacles()*self.avoid_obst_weight
+    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     if self.behaviors["evade"]:
+    #         force : Vec2 = self.evade(self.player)*self.evade_weight
+    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     #TODO: world point setting
+    #     # if self.behaviors["flee"]:  
+    #     #     force : Vec2 = self.flee(self.agent.world.crosshairs)*self.flee_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+    #     #for not implemented gruping behavior
+    #     # if self.behaviors["separation"]:
+    #     #     force : Vec2 = self.separation(self.agent.world.agents)*self.separation_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     # if self.behaviors["allignment"]:
+    #     #     force : Vec2 = self.alignment(self.agent.world.agents)*self.align_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     # if self.behaviors["cohesion"]:
+    #     #     force : Vec2 = self.cohesion(self.agent.world.agents)*self.cohesion_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+    #     #TODO: as above
+    #     # if self.behaviors["seek"]:  
+    #     #     force : Vec2 = self.seek(self.agent.world.crosshairs)*self.seek_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     #TODO: as above
+    #     # if self.behaviors["arrive"]:
+    #     #     force : Vec2 = self.arrive(self.agent.world.crosshairs)*self.arrive_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     if self.behaviors["wander"]:
+    #         force : Vec2 = self.wander()*self.wander_weight
+    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     if self.behaviors["pursuit"]:
+    #         force : Vec2 = self.pursuit(self.player)*self.pursuit_weight
+    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+    #     #for not implemented behaviors
+    #     # if self.behaviors["interpose"]:
+    #     #     force : Vec2 = self.interpose(self.add_agent_1, self.add_agent_2)*self.interpose_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+    #     # if self.behaviors["hide"]:
+    #     #     force : Vec2 = self.hide(self.player)*self.hide_weight
+    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+    #     return self.steering_force
+    
+    #simplified but works, see above funct
     def calculate(self) -> Vec2:
         return self.wander() + self.avoid_obstacles() + self.avoid_walls()
 
     def forward_comp(self) -> Vec2:
-        pass
+        return self.agent.direction.dot(self.steering_force)
     
     def side_comp(self) -> Vec2:
-        pass
+        return self.agent.side.dot(self.steering_force)
     
+    def accumulate_force(self, running_total : Vec2, added_force : Vec2) -> bool :
+        remaining_mag : float = self.agent.max_force - running_total.length()
+        if remaining_mag <= 0: return False
+        
+        if added_force.length() < remaining_mag:
+            running_total += added_force
+        else:
+            running_total += added_force.normalize()*remaining_mag
+        return True
+    
+    def start_behavior(self, behavior : str) -> None:
+        self.behaviors[behavior] = True
+    
+    def end_behavior(self, behavior: str) -> None :
+        self.behaviors[behavior] = False
+       
     def seek(self, target : Vec2) -> Vec2:
         '''Seek target position.'''
         new_velocity : Vec2 = (target-self.agent.position)*self.agent.max_speed
         new_velocity.normalize_ip()
         
         return (new_velocity - self.agent.velocity)
-    
+ 
     def flee(self, target : Vec2) -> Vec2:
         '''Flee if the target position is within panic distance.'''
         
@@ -157,6 +257,19 @@ class SteeringBehaviors:
         
         return steering_force
             
-                        
-                        
+    # def separation(self, neighbors : list) -> Vec2:
+    #     pass
+    
+    # def alignment(self, neighbors : list) -> Vec2:
+    #     pass
+    
+    # def cohesion(self, neighbors : list) -> Vec2:
+    #     pass              
+    
+    # def interpose(self, agent_A : GameObject, agent_B : GameObject) -> Vec2:
+    #     pass
+    
+    # def hide(self, hunter : GameObject) -> Vec2 :
+    #     pass
+                 
                         

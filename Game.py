@@ -26,6 +26,9 @@ class Game:
         
     def run(self) -> None:
         enemy = Enemy(self.window, self.obstacles, self.walls, self.player)
+        enemy.steering.start_behavior("wander")
+        enemy.steering.start_behavior("avoid walls")
+        enemy.steering.start_behavior("avoid obstacles")
         while self.running:
             dt : int = self.clock.tick(90)
             
