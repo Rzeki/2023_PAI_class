@@ -11,6 +11,8 @@ class GameObject:
         self.radius : int = 50
         self.body : pg.Rect = pg.Rect(0,0,0,0)
         
+        self.tag : bool  = False
+        
     def draw(self) -> None:
         pg.draw.circle(self.window, pg.Color(255, 255, 255), self.position, self.radius)
 
@@ -23,16 +25,15 @@ class MovingObject(GameObject):
         self.direction : Vec2 = Vec2(util.dir["ZERO"])
         self.side : Vec2 = Vec2(util.dir["ZERO"])       #perpendicular to direction, must always update while updating direction vec
         
+        self.speed : float = 0.001
         self.mass : float = 0.0
         
         self.max_speed : float = 2
         self.max_force : float = 5
         self.max_turn : float = 10
-        self.tag : bool  = False
         
-        self.speed : float = 0.001
     
-    def update(self, dt : float):
+    def update(self, dt : float) -> None:
         self.position += self.velocity * dt
     
     def check_boundaries(self) -> bool :
