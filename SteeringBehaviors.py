@@ -14,13 +14,13 @@ class SteeringBehaviors:
         
         self.wander_radius : float = 10
         self.wander_distance : float = 10
-        self.wander_jitter : float = 10
+        self.wander_jitter : float = 20
         self.wander_target : Vec2 = Vec2(self.wander_radius*math.cos(math.pi*2), self.wander_radius*math.sin(math.pi*2))
     
-        self.min_detection_box_len : float = 40.0
+        self.min_detection_box_len : float = 70
         
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 40
+        self.feeler_length : float = 150
         
         self.neighborhood_dist : float = 50
         
@@ -50,64 +50,62 @@ class SteeringBehaviors:
         # self.interpose_weight : float = 1
         # self.hide_weight : float = 1
     
-    #by the book but doesn't work
-    #TODO: fix by tweaking params here and in enemy.py idk
-    # def calculate(self) -> Vec2:
-    #     self.steering_force = Vec2(0,0)
-        
-    #     if self.behaviors["avoid walls"]:
-    #         force : Vec2 = self.avoid_walls()*self.avoid_walls_weight
-    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     if self.behaviors["avoid obstacles"]:
-    #         force : Vec2 = self.avoid_obstacles()*self.avoid_obst_weight
-    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     if self.behaviors["evade"]:
-    #         force : Vec2 = self.evade(self.player)*self.evade_weight
-    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     #TODO: world point setting
-    #     # if self.behaviors["flee"]:  
-    #     #     force : Vec2 = self.flee(self.agent.world.crosshairs)*self.flee_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-        
-    #     #for not implemented gruping behavior
-    #     # if self.behaviors["separation"]:
-    #     #     force : Vec2 = self.separation(self.agent.world.agents)*self.separation_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     # if self.behaviors["allignment"]:
-    #     #     force : Vec2 = self.alignment(self.agent.world.agents)*self.align_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     # if self.behaviors["cohesion"]:
-    #     #     force : Vec2 = self.cohesion(self.agent.world.agents)*self.cohesion_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-        
-    #     #TODO: as above
-    #     # if self.behaviors["seek"]:  
-    #     #     force : Vec2 = self.seek(self.agent.world.crosshairs)*self.seek_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     #TODO: as above
-    #     # if self.behaviors["arrive"]:
-    #     #     force : Vec2 = self.arrive(self.agent.world.crosshairs)*self.arrive_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     if self.behaviors["wander"]:
-    #         force : Vec2 = self.wander()*self.wander_weight
-    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     if self.behaviors["pursuit"]:
-    #         force : Vec2 = self.pursuit(self.player)*self.pursuit_weight
-    #         if not self.accumulate_force(self.steering_force, force): return self.steering_force
-        
-    #     #for not implemented behaviors
-    #     # if self.behaviors["interpose"]:
-    #     #     force : Vec2 = self.interpose(self.add_agent_1, self.add_agent_2)*self.interpose_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-    #     # if self.behaviors["hide"]:
-    #     #     force : Vec2 = self.hide(self.player)*self.hide_weight
-    #     #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
-        
-    #     return self.steering_force
-    
-    #simplified but works, see above funct
     def calculate(self) -> Vec2:
-        return self.wander() + self.avoid_obstacles() + self.avoid_walls()
+        self.steering_force = Vec2(0,0)
+        
+        if self.behaviors["avoid walls"]:
+            force : Vec2 = self.avoid_walls()*self.avoid_walls_weight
+            if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        if self.behaviors["avoid obstacles"]:
+            force : Vec2 = self.avoid_obstacles()*self.avoid_obst_weight
+            if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        if self.behaviors["evade"]:
+            force : Vec2 = self.evade(self.player)*self.evade_weight
+            if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        #TODO: world point setting
+        # if self.behaviors["flee"]:  
+        #     force : Vec2 = self.flee(self.agent.world.crosshairs)*self.flee_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+        #for not implemented gruping behavior
+        # if self.behaviors["separation"]:
+        #     force : Vec2 = self.separation(self.agent.world.agents)*self.separation_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        # if self.behaviors["allignment"]:
+        #     force : Vec2 = self.alignment(self.agent.world.agents)*self.align_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        # if self.behaviors["cohesion"]:
+        #     force : Vec2 = self.cohesion(self.agent.world.agents)*self.cohesion_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+        #TODO: as above
+        # if self.behaviors["seek"]:  
+        #     force : Vec2 = self.seek(self.agent.world.crosshairs)*self.seek_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        #TODO: as above
+        # if self.behaviors["arrive"]:
+        #     force : Vec2 = self.arrive(self.agent.world.crosshairs)*self.arrive_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        if self.behaviors["wander"]:
+            force : Vec2 = self.wander()*self.wander_weight
+            if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        if self.behaviors["pursuit"]:
+            force : Vec2 = self.pursuit(self.player)*self.pursuit_weight
+            if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+        #for not implemented behaviors
+        # if self.behaviors["interpose"]:
+        #     force : Vec2 = self.interpose(self.add_agent_1, self.add_agent_2)*self.interpose_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        # if self.behaviors["hide"]:
+        #     force : Vec2 = self.hide(self.player)*self.hide_weight
+        #     if not self.accumulate_force(self.steering_force, force): return self.steering_force
+        
+        return self.steering_force
+    
+    #simplified for testing
+    # def calculate(self) -> Vec2:
+    #     return self.wander() + self.avoid_obstacles() + self.avoid_walls()
 
     def forward_comp(self) -> Vec2:
         return self.agent.direction.dot(self.steering_force)
@@ -173,13 +171,13 @@ class SteeringBehaviors:
         if to_evader.dot(self.agent.direction) > 0 and relative_heading < -0.95:
             return self.seek(evader.position)
         else:
-            look_ahead_time : float = to_evader.length()/(self.agent.max_speed+evader.speed)
+            look_ahead_time : float = to_evader.length()/(self.agent.max_speed+evader.speed())
             return self.seek(evader.position + evader.velocity*look_ahead_time)
     
     def evade(self, pursuer : MovingObject) -> Vec2 :
         '''Evade target object'''
         to_pursuer = pursuer.position - self.agent.position
-        look_ahead_time : float = to_pursuer.length()/(self.agent.max_speed+pursuer.speed)
+        look_ahead_time : float = to_pursuer.length()/(self.agent.max_speed+pursuer.speed())
         return self.flee(pursuer.position + pursuer.velocity*look_ahead_time)
         
     def wander(self) -> Vec2:
@@ -193,7 +191,7 @@ class SteeringBehaviors:
         return target_world - self.agent.position
     
     def avoid_obstacles(self) -> Vec2:
-        box_length : float = self.min_detection_box_len + (self.agent.speed/self.agent.max_speed)*self.min_detection_box_len
+        box_length : float = self.min_detection_box_len + (self.agent.speed()/self.agent.max_speed)*self.min_detection_box_len
         
         for obstacle in self.agent.game_world.obstacles:
             obstacle.tag = False

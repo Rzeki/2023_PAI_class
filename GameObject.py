@@ -25,16 +25,18 @@ class MovingObject(GameObject):
         self.direction : Vec2 = Vec2(util.dir["ZERO"])
         self.side : Vec2 = Vec2(util.dir["ZERO"])       #perpendicular to direction, must always update while updating direction vec
         
-        self.speed : float = 0.001
         self.mass : float = 0.0
         
-        self.max_speed : float = 2
-        self.max_force : float = 5
+        self.max_speed : float = 0.5
+        self.max_force : float = 75
         self.max_turn : float = 10
         
     
     def update(self, dt : float) -> None:
         self.position += self.velocity * dt
+    
+    def speed(self) -> float:
+        return self.velocity.length()   
     
     def check_boundaries(self) -> bool :
         '''Checks screen bounds and bounces object.'''

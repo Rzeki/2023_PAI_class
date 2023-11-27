@@ -1,7 +1,8 @@
 import random
 from pygame import Vector2 as Vec2
 
-DEBUG : bool = True
+DEBUG : bool = False
+screen_wdth, screen_hgth = 1920, 1080
 
 # WHY WON"T IT FXXXX WORK
 dir : dict = {
@@ -14,6 +15,9 @@ dir : dict = {
 
 def rand_clamped() -> float:
     return random.random()-random.random()
+
+def random_position() -> Vec2:
+    return Vec2(random.randint(1, screen_wdth), random.randint(1, screen_hgth))
 
 def wrap_around(pos : Vec2, max_x : int, max_y : int) -> None:
     if pos.x > max_x: pos.x = 0.0

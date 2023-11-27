@@ -1,23 +1,19 @@
 import pygame as pg
+import util
 from GameWorld import GameWorld
 from Player import Player
-from Vehicle import Vehicle
 
 
 class Game:
     def __init__(self) -> None:
         pg.init()
         self.running : bool = True
-        self.window : pg.Surface = pg.display.set_mode((1200, 900))
+        self.window : pg.Surface = pg.display.set_mode((util.screen_wdth, util.screen_hgth))
         self.player = Player(self.window)
         self.clock = pg.time.Clock()
-        self.game_world = GameWorld(self.window)
+        self.game_world = GameWorld(self.window, self.player)
         
     def run(self) -> None:
-        agent = Vehicle(self.game_world, self.player)
-        agent.steering.start_behavior("wander")
-        agent.steering.start_behavior("avoid walls")
-        agent.steering.start_behavior("avoid obstacles")
         while self.running:
             dt : int = self.clock.tick(90)
             
@@ -26,8 +22,8 @@ class Game:
                     self.running = False
 
             keys = pg.key.get_pressed()
-            if keys[pg.K_w]:
-                self.player.velocity += pg.Vector2.normalize(self.player.direction) * self.player.speed * dt
+            if keys[pg.K_w]: #fix this
+                self.player.velocity += pg.Vector2.normalize(self.player.direction) * self.player._speed * dt
                 self.player.velocity.x = pg.math.clamp(self.player.velocity.x, -1, 1)
                 self.player.velocity.y = pg.math.clamp(self.player.velocity.y, -1, 1)
             if keys[pg.K_s]:
@@ -40,7 +36,6 @@ class Game:
             #===================DRAWING=============================        
             self.game_world.draw()
             self.player.draw()
-            agent.draw()
             
             #===================COLLISION===========================
             self.player.check_boundaries()
@@ -49,10 +44,13 @@ class Game:
             
             
             #===================MOVEMENT============================
+            self.game_world.update(dt)
             self.player.update(dt)
-            agent.update(dt)
             
             
+            #===================DEBUG============================
+            # print(agent.velocity)        
+                    
                     
             pg.display.update()
             
