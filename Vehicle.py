@@ -17,6 +17,8 @@ class Vehicle(MovingObject):
         self.direction = Vec2(util.dir["UP"])
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
+        
+        self.neighborhood_radius = 100
     
     def update(self, dt : float) -> None:
         steering_force : Vec2 = self.steering.calculate()
@@ -45,4 +47,16 @@ class Vehicle(MovingObject):
             # pg.draw.circle(self.window, pg.Color(255, 0, 255), 
             #                self.position + self.steering.wander_distance,
             #                self.steering.wander_radius)
-         
+    
+    def tag_neighbors(self) -> None:
+        '''Tag other agents within radius'''
+        for entity in self.game_world.moving_entities:
+            entity.tag = False
+
+            to_entity : Vec2 = entity.position - self.position
+            range : float = self.neighborhood_radius + entity.radius
+            
+            #check if != works
+            if entity != self and to_entity.length_squared() < range*range:
+                entity.tag = True
+                 

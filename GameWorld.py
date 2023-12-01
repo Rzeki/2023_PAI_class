@@ -10,6 +10,7 @@ class GameWorld:
         self.window = window
         self.window_w, self.window_h = window.get_size()
         self.player : MovingObject = player
+        
         #container of all the moving entities
         self.moving_entities : list[MovingObject] = [
             Vehicle(self, self.player),
@@ -34,11 +35,6 @@ class GameWorld:
         ]
         #for pausing motion
         self.pause : bool = False
-        
-        #in book used for user inputted position
-        #but we can and I guess hsould use it for enemy steering
-        #it will come up later when coding proper simulation behavior
-        self.crosshair : Vec2 = Vec2(self.window_w/2, self.window_h/2)
         
         for entity in self.moving_entities:
             entity.steering.start_behavior("wander")

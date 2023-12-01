@@ -30,12 +30,12 @@ class MovingObject(GameObject):
         self.max_speed : float = 0.5
         self.max_force : float = 75
         self.max_turn : float = 10
-        
     
     def update(self, dt : float) -> None:
         self.position += self.velocity * dt
     
     def speed(self) -> float:
+        '''Returns agent's speed'''
         return self.velocity.length()   
     
     def check_boundaries(self) -> bool :
