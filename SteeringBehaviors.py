@@ -54,7 +54,7 @@ class SteeringBehaviors:
         self.flee_weight : float = 1
         self.arrive_weight : float = 1
         self.pursuit_weight : float = 1
-        self.evade_weight : float = 00.1
+        self.evade_weight : float = 0.1
         self.wander_weight : float = 1
         self.avoid_obst_weight : float = 10
         self.avoid_walls_weight : float = 10
