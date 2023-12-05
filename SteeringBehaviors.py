@@ -29,7 +29,7 @@ class SteeringBehaviors:
         
         #for wall detection
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 150
+        self.feeler_length : float = 50
         
         #agent's final steering force
         self.steering_force : Vec2 = Vec2(0, 0)
@@ -218,7 +218,7 @@ class SteeringBehaviors:
             obstacle.tag = False
             range : Vec2 = obstacle.position - self.agent.position
             radius = box_length + obstacle.radius
-            if range.length_squared() < radius*radius:
+            if range.length_squared() < radius**2:
                 obstacle.tag = True
         
         closest_obstacle : GameObject = None

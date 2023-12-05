@@ -13,8 +13,11 @@ class Vehicle(MovingObject):
         self.game_world = game_world
         self.mass = 2000
         self.radius = 20
+        self.num_last_directions = 5
         self.position = util.random_position()
         self.direction = Vec2(util.dir["UP"])
+        self.smooth_direction = [self.direction]
+        self.average_direction = self.direction
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
         
@@ -33,6 +36,18 @@ class Vehicle(MovingObject):
         if self.velocity.length_squared() > 0.00000001:   #check if needed
             self.direction = self.velocity.normalize()
             self.side = util.vec_perp(self.direction)
+            
+            # self.smooth_direction.insert(0, self.direction)
+            # if len(self.smooth_direction) > self.num_last_directions:
+            #     self.smooth_direction.pop()
+            
+            # test = Vec2(0,0)
+            # for v in self.smooth_direction:
+            #     test.x += v.x
+            #     test.y += v.y
+            # self.average_direction = test/len(self.smooth_direction)
+            
+                
         
         # for testing
         # wdth, hgth = self.window.get_size()

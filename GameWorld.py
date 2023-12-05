@@ -21,10 +21,12 @@ class GameWorld:
         ]
         #all circular obstacles
         self.obstacles = [
-            Obstacle(window, 500, 200, 70),
-            Obstacle(window, 150, 100, 50),
-            Obstacle(window, 1600, 900, 70),
-            Obstacle(window, 1000, 300, 100)
+            Obstacle(window, 700, 300, 50),
+            Obstacle(window, 1200, 300, 50),
+            Obstacle(window, 700, 780, 50),
+            Obstacle(window, 1200, 780, 50),
+            Obstacle(window, 300, 780, 50),
+            Obstacle(window, 300, 300, 50)
         ]
         #bounding walls
         self.walls = [
@@ -37,10 +39,11 @@ class GameWorld:
         self.pause : bool = False
         
         for entity in self.moving_entities:
-            entity.steering.start_behavior("wander")
+            # entity.steering.start_behavior("wander")
             entity.steering.start_behavior("avoid walls")
             entity.steering.start_behavior("avoid obstacles")
-            entity.steering.start_behavior("evade")
+            # entity.steering.start_behavior("evade")
+            entity.steering.start_behavior("hide")
             
     
     def update(self, dt : float) -> None :

@@ -15,7 +15,7 @@ class Game:
         
     def run(self) -> None:
         while self.running:
-            dt : int = self.clock.tick(90)
+            dt : int = self.clock.tick(200)
             
             for event in pg.event.get():
                 if event.type == pg.QUIT:

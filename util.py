@@ -1,7 +1,7 @@
 import random
 from pygame import Vector2 as Vec2
 
-DEBUG : bool = False
+DEBUG : bool = True
 screen_wdth, screen_hgth = 1920, 1080
 
 MaxFloat : float = 99999
@@ -21,11 +21,11 @@ def rand_clamped() -> float:
 def random_position() -> Vec2:
     return Vec2(random.randint(1, screen_wdth), random.randint(1, screen_hgth))
 
-def wrap_around(pos : Vec2, max_x : int, max_y : int) -> None:
-    if pos.x > max_x: pos.x = 0.0
-    if pos.x < 0: pos.x = max_x
-    if pos.y < 0: pos.y = max_y
-    if pos.y > max_y: pos.y = 0.0
+# def wrap_around(pos : Vec2, max_x : int, max_y : int) -> None:
+#     if pos.x > max_x: pos.x = 0.0
+#     if pos.x < 0: pos.x = max_x
+#     if pos.y < 0: pos.y = max_y
+#     if pos.y > max_y: pos.y = 0.0
 
 def vec_perp(vec : Vec2) -> Vec2:
     return Vec2(1, -vec.x/vec.y)
