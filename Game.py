@@ -39,8 +39,13 @@ class Game:
             
             #===================COLLISION===========================
             self.player.check_boundaries()
+            for enemy in self.game_world.moving_entities:
+                enemy.check_boundaries()
+                
             for obst in self.game_world.obstacles:
                 self.player.collide(obst)
+                for enemy in self.game_world.moving_entities:
+                    enemy.collide(obst)
             
             
             #===================MOVEMENT============================

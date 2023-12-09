@@ -10,4 +10,8 @@ class Enemy(Vehicle):
         super().__init__(game_world, player)
         
         self.state_machine = StateMachine(self)
+        self.state_machine.change_state(StartState())
+        
+        self.group_timer = pg.time.get_ticks() + 20000
+
 

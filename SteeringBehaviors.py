@@ -16,7 +16,7 @@ class SteeringBehaviors:
         self.world_point : Vec2 = None
         
         #for flee
-        self.panic_distance : float = 150
+        self.panic_distance : float = 300
         
         #for wander
         self.wander_radius : float = 10
@@ -29,7 +29,7 @@ class SteeringBehaviors:
         
         #for wall detection
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 50
+        self.feeler_length : float = 30
         
         #agent's final steering force
         self.steering_force : Vec2 = Vec2(0, 0)
@@ -356,7 +356,7 @@ class SteeringBehaviors:
         else: return self.arrive(best_hiding_spot, 1)
     
     def get_hiding_pos(self, obstacle_pos : Vec2, obstacle_radius : float, target_pos : Vec2) -> Vec2:
-        dist_from_boundary : float = 30
+        dist_from_boundary : float = 40
         dist_away : float = obstacle_radius + dist_from_boundary
         
         to_obstacle : Vec2 = Vec2.normalize(obstacle_pos-target_pos)

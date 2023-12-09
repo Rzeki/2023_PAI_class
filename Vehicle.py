@@ -16,8 +16,8 @@ class Vehicle(MovingObject):
         self.num_last_directions = 5
         self.position = util.random_position()
         self.direction = Vec2(util.dir["UP"])
-        self.smooth_direction = [self.direction]
-        self.average_direction = self.direction
+        # self.smooth_direction = [self.direction]
+        # self.average_direction = self.direction
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
         
@@ -74,4 +74,5 @@ class Vehicle(MovingObject):
             #check if != works
             if entity != self and to_entity.length_squared() < range*range:
                 entity.tag = True
+                
                  

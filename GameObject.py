@@ -63,3 +63,12 @@ class MovingObject(GameObject):
             self.side = util.vec_perp(self.direction)
             return True
         else: return False
+        
+    def collide(self, obj) -> None:
+        distance : Vec2 = self.position - obj.position
+        n = distance.normalize()
+        
+        if distance.length() < self.radius + obj.radius:
+            self.velocity.reflect_ip(n)
+            self.direction.reflect_ip(n) 
+
