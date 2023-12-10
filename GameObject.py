@@ -27,9 +27,9 @@ class MovingObject(GameObject):
         
         self.mass : float = 0.0
         
-        self.max_speed : float = 0.3
-        self.max_force : float = 10
-        self.max_turn : float = 10
+        self.max_speed : float = 0.1
+        self.max_force : float = 5
+        self.max_turn : float = 5
     
     def update(self, dt : float) -> None:
         self.position += self.velocity * dt

@@ -21,7 +21,7 @@ class SteeringBehaviors:
         #for wander
         self.wander_radius : float = 10
         self.wander_distance : float = 10
-        self.wander_jitter : float = 20
+        self.wander_jitter : float = 10
         self.wander_target : Vec2 = Vec2(self.wander_radius*math.cos(math.pi*2), self.wander_radius*math.sin(math.pi*2))
 
         #for obstacle detection
@@ -29,7 +29,7 @@ class SteeringBehaviors:
         
         #for wall detection
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 30
+        self.feeler_length : float = 80
         
         #agent's final steering force
         self.steering_force : Vec2 = Vec2(0, 0)
@@ -56,17 +56,18 @@ class SteeringBehaviors:
         self.pursuit_weight : float = 1
         self.evade_weight : float = 0.1
         self.wander_weight : float = 1
-        self.avoid_obst_weight : float = 10
-        self.avoid_walls_weight : float = 10
-        self.separation_weight : float = 1
-        self.alignment_weight : float = 1
-        self.cohesion_weight : float = 2
+        self.avoid_obst_weight : float = 20
+        self.avoid_walls_weight : float = 20
+        self.separation_weight : float = 10
+        self.alignment_weight : float = 0.1
+        self.cohesion_weight : float = 0.2
         self.interpose_weight : float = 1
         self.hide_weight : float = 1
     
     def calculate(self) -> Vec2:
         '''Calculate weighted truncated running sum w/ prioritization of currently enabled steering forces'''
         #this function is supposed to look like this, trust me -Ruby
+        #use match statement goddamnit -Rzeki
         self.steering_force = Vec2(0,0)
         
         if self.behaviors["separation"] or self.behaviors["alignment"] or self.behaviors["cohesion"]:
@@ -196,7 +197,7 @@ class SteeringBehaviors:
     def evade(self, pursuer : MovingObject) -> Vec2 :
         '''Evade target object'''
         to_pursuer = pursuer.position - self.agent.position
-        look_ahead_time : float = to_pursuer.length()/(self.agent.max_speed+pursuer.speed())
+        look_ahead_time : float = to_pursuer.length()/(self.agent.max_speed*3+pursuer.speed())
         return self.flee(pursuer.position + pursuer.velocity*look_ahead_time)
         
     def wander(self) -> Vec2:
@@ -356,7 +357,7 @@ class SteeringBehaviors:
         else: return self.arrive(best_hiding_spot, 1)
     
     def get_hiding_pos(self, obstacle_pos : Vec2, obstacle_radius : float, target_pos : Vec2) -> Vec2:
-        dist_from_boundary : float = 40
+        dist_from_boundary : float = 60
         dist_away : float = obstacle_radius + dist_from_boundary
         
         to_obstacle : Vec2 = Vec2.normalize(obstacle_pos-target_pos)

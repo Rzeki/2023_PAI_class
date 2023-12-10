@@ -9,7 +9,7 @@ class Player(MovingObject):
         self.position = pg.Vector2([ z / 2 for z in self.window.get_size() ])
         self.direction = Vec2(util.dir["UP"])
         self.body = pg.image.load("assets\spaceship.png")
-        self._speed = 0.001 #fix this so its not needed
+        self._speed = 0.0005 #fix this so its not needed
               
     def draw(self) -> None:
         angle = self.direction.angle_to(pg.Vector2(0,-1))

@@ -15,7 +15,7 @@ class Game:
         
     def run(self) -> None:
         while self.running:
-            dt : int = self.clock.tick(200)
+            dt : int = self.clock.tick(90)
             
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -29,9 +29,9 @@ class Game:
             if keys[pg.K_s]:
                 self.player.velocity = pg.Vector2(0,0)
             if keys[pg.K_a]:
-                self.player.rotate(-3)
+                self.player.rotate(-2)
             if keys[pg.K_d]:
-                self.player.rotate(3)
+                self.player.rotate(2)
                     
             #===================DRAWING=============================        
             self.game_world.draw()
@@ -41,9 +41,9 @@ class Game:
             self.player.check_boundaries()
             for enemy in self.game_world.moving_entities:
                 enemy.check_boundaries()
-                for other_enemy in self.game_world.moving_entities:
-                    if enemy is not other_enemy:
-                        enemy.collide(other_enemy)
+                # for other_enemy in self.game_world.moving_entities:
+                #     if enemy is not other_enemy:
+                #         enemy.collide(other_enemy)
                         
                 
             for obst in self.game_world.obstacles:

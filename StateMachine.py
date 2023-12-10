@@ -1,5 +1,6 @@
 import pygame as pg
 from pygame import Vector2 as Vec2
+import random
             
 
 class State:
@@ -60,6 +61,21 @@ class Hide(State):
         agent.steering.end_behavior("hide")
         pass
     
+class Pursuit(State):
+    def __init__(self) -> None:
+        pass
+    
+    def enter_state(self, agent) -> None:
+        agent.steering.start_behavior("pursuit")
+        pass
+    
+    def execute_state(self, agent) -> None:
+        pass
+    
+    def exit_state(self, agent) -> None:
+        agent.steering.end_behavior("pursuit")
+        pass
+    
 class Evade(State):
     def __init__(self) -> None:
         pass
@@ -69,6 +85,9 @@ class Evade(State):
         pass
     
     def execute_state(self, agent) -> None:
+        if agent.steering.player.position.distance_to(agent.position) > agent.steering.panic_distance:
+            agent.state_machine.change_state(Group())
+        
         pass
     
     def exit_state(self, agent) -> None:
@@ -87,8 +106,10 @@ class Wander(State):
         if agent.steering.player.position.distance_to(agent.position) < agent.steering.panic_distance:
             agent.group_timer = pg.time.get_ticks() + 20000
             agent.state_machine.change_state(Evade())
-        
-    
+     
+        if pg.time.get_ticks() > agent.group_timer:
+            agent.state_machine.change_state(Group())
+            
     def exit_state(self, agent) -> None:
         agent.steering.end_behavior("wander")
         pass
@@ -96,20 +117,24 @@ class Wander(State):
     
 class Group(State):
     def __init__(self) -> None:
+        
         pass
     
     def enter_state(self, agent) -> None:
+        agent.group_timer = pg.time.get_ticks() + 20000
         agent.steering.start_behavior("alignment")
         agent.steering.start_behavior("separation")
         agent.steering.start_behavior("cohesion")
-        agent.steering.start_behavior("wander")
+        agent.steering.start_behavior("hide")
         pass
     
     def execute_state(self, agent) -> None:
+        # if pg.time.get_ticks() > agent.group_timer:   
+        #     agent.state_machine.change_state(Pursuit())
         pass
     
     def exit_state(self, agent) -> None:
-        
+        agent.steering.end_behavior("hide")
         pass
 
 #=====================STATE MACHINE================================================================================
@@ -121,7 +146,6 @@ class StateMachine:
         self._current_state : State = StartState()
         self._previous_state : State = None
         self._global_state : State = None
-        self.group_timer = pg.time.set_timer(pg.USEREVENT, 1000)
         
     def set_current_state(self, state : State) -> None : self._current_state = state
     def get_current_state(self) -> State : return self._current_state
@@ -139,9 +163,10 @@ class StateMachine:
         if self._current_state:
             self._current_state.execute_state(self._owner)
             
-        if pg.time.get_ticks() > self._owner.group_timer:
-            self.change_state(Group())
             
+        keys = pg.key.get_pressed()
+        if keys[pg.K_n]: #fix this
+            self.change_state(Pursuit())
         
             
             
