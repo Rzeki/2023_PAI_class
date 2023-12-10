@@ -92,6 +92,25 @@ class Wander(State):
     def exit_state(self, agent) -> None:
         agent.steering.end_behavior("wander")
         pass
+    
+    
+class Group(State):
+    def __init__(self) -> None:
+        pass
+    
+    def enter_state(self, agent) -> None:
+        agent.steering.start_behavior("alignment")
+        agent.steering.start_behavior("separation")
+        agent.steering.start_behavior("cohesion")
+        agent.steering.start_behavior("wander")
+        pass
+    
+    def execute_state(self, agent) -> None:
+        pass
+    
+    def exit_state(self, agent) -> None:
+        
+        pass
 
 #=====================STATE MACHINE================================================================================
 
@@ -121,7 +140,7 @@ class StateMachine:
             self._current_state.execute_state(self._owner)
             
         if pg.time.get_ticks() > self._owner.group_timer:
-            self.change_state(Hide())
+            self.change_state(Group())
             
         
             

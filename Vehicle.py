@@ -21,7 +21,7 @@ class Vehicle(MovingObject):
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
         
-        self.neighborhood_radius = 100
+        self.neighborhood_radius = 300
     
     def update(self, dt : float) -> None:
         steering_force : Vec2 = self.steering.calculate()

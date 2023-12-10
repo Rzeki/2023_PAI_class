@@ -86,13 +86,13 @@ class SteeringBehaviors:
             if not self.accumulate_force(self.steering_force, force): return self.steering_force
         
         if self.behaviors["separation"]:
-            force : Vec2 = self.separation(self.agent.world.agents)*self.separation_weight
+            force : Vec2 = self.separation(self.agent.game_world.moving_entities)*self.separation_weight
             if not self.accumulate_force(self.steering_force, force): return self.steering_force
         if self.behaviors["alignment"]:
-            force : Vec2 = self.alignment(self.agent.world.agents)*self.alignment_weight
+            force : Vec2 = self.alignment(self.agent.game_world.moving_entities)*self.alignment_weight
             if not self.accumulate_force(self.steering_force, force): return self.steering_force
         if self.behaviors["cohesion"]:
-            force : Vec2 = self.cohesion(self.agent.world.agents)*self.cohesion_weight
+            force : Vec2 = self.cohesion(self.agent.game_world.moving_entities)*self.cohesion_weight
             if not self.accumulate_force(self.steering_force, force): return self.steering_force
         
         if self.behaviors["seek"]:  
