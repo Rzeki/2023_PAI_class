@@ -3,7 +3,8 @@ from pygame import Vector2 as Vec2
 
 import util
 from GameObject import MovingObject
-from SteeringBehaviors import SteeringBehaviors    
+from SteeringBehaviors import SteeringBehaviors  
+import random  
 
 
 class Vehicle(MovingObject):
@@ -13,15 +14,12 @@ class Vehicle(MovingObject):
         self.game_world = game_world
         self.mass = 2000
         self.radius = 20
-        self.num_last_directions = 5
-        self.position = util.random_position()
+        self.position = random.choice([Vec2(60,60), Vec2(util.screen_wdth - 60, 60)])
         self.direction = Vec2(util.dir["UP"])
-        # self.smooth_direction = [self.direction]
-        # self.average_direction = self.direction
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
         
-        self.neighborhood_radius = 300
+        self.neighborhood_radius = 200
     
     def update(self, dt : float) -> None:
         steering_force : Vec2 = self.steering.calculate()
@@ -33,7 +31,7 @@ class Vehicle(MovingObject):
         
         self.position += self.velocity*dt
         
-        if self.velocity.length_squared() > 0.00000001:   #check if needed
+        if self.velocity.length_squared() > 0.00001:   #check if needed
             self.direction = self.velocity.normalize()
             self.side = util.vec_perp(self.direction)
             
@@ -72,7 +70,18 @@ class Vehicle(MovingObject):
             range : float = self.neighborhood_radius + entity.radius
             
             #check if != works
-            if entity != self and to_entity.length_squared() < range*range:
+            if entity is not self and to_entity.length_squared() < range*range:
                 entity.tag = True
                 
-                 
+    def count_neighbors(self) -> int:
+        '''count other agents within radius'''
+        counter = 0
+        for entity in self.game_world.moving_entities:
+            entity.tag = False      
+            to_entity : Vec2 = entity.position - self.position
+            range : float = self.neighborhood_radius + entity.radius
+            #check if != works
+            if entity is not self and to_entity.length_squared() < range*range:
+                counter += 1  
+        
+        return counter

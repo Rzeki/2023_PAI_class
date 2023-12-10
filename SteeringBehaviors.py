@@ -56,13 +56,13 @@ class SteeringBehaviors:
         self.pursuit_weight : float = 1
         self.evade_weight : float = 0.1
         self.wander_weight : float = 1
-        self.avoid_obst_weight : float = 20
-        self.avoid_walls_weight : float = 20
-        self.separation_weight : float = 10
-        self.alignment_weight : float = 0.1
-        self.cohesion_weight : float = 0.2
+        self.avoid_obst_weight : float = 30
+        self.avoid_walls_weight : float = 30
+        self.separation_weight : float = 20
+        self.alignment_weight : float = 0.5
+        self.cohesion_weight : float = 0.4
         self.interpose_weight : float = 1
-        self.hide_weight : float = 1
+        self.hide_weight : float = 5
     
     def calculate(self) -> Vec2:
         '''Calculate weighted truncated running sum w/ prioritization of currently enabled steering forces'''

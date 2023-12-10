@@ -23,6 +23,7 @@ class StartState(State):
     def enter_state(self, agent) -> None:
         agent.steering.start_behavior("avoid obstacles")
         agent.steering.start_behavior("avoid walls")
+
         pass
     
     def execute_state(self, agent) -> None:
@@ -116,22 +117,24 @@ class Wander(State):
     
     
 class Group(State):
-    def __init__(self) -> None:
-        
+    def __init__(self) -> None:   
         pass
     
     def enter_state(self, agent) -> None:
         agent.group_timer = pg.time.get_ticks() + 20000
-        agent.steering.start_behavior("alignment")
         agent.steering.start_behavior("separation")
+        agent.steering.start_behavior("alignment")
         agent.steering.start_behavior("cohesion")
         agent.steering.start_behavior("hide")
-        pass
+    
     
     def execute_state(self, agent) -> None:
         # if pg.time.get_ticks() > agent.group_timer:   
         #     agent.state_machine.change_state(Pursuit())
-        pass
+        
+        if agent.count_neighbors() > 2:
+            agent.state_machine.change_state(Pursuit())
+        
     
     def exit_state(self, agent) -> None:
         agent.steering.end_behavior("hide")
@@ -167,6 +170,7 @@ class StateMachine:
         keys = pg.key.get_pressed()
         if keys[pg.K_n]: #fix this
             self.change_state(Pursuit())
+            
         
             
             

@@ -22,9 +22,11 @@ class GameWorld:
         #all circular obstacles
         self.obstacles = [
             Obstacle(window, 700, 300, 50),
-            Obstacle(window, 1200, 300, 50),
             Obstacle(window, 700, 780, 50),
+            Obstacle(window, 1200, 300, 50),
             Obstacle(window, 1200, 780, 50),
+            Obstacle(window, 1600, 300, 50),
+            Obstacle(window, 1600, 780, 50),
             Obstacle(window, 300, 780, 50),
             Obstacle(window, 300, 300, 50)
         ]
@@ -50,6 +52,14 @@ class GameWorld:
         for entity in self.moving_entities:
             entity.update(dt)
             entity.state_machine.update()
+        
+        # for event in pg.event.get():
+        #     if event.type == pg.USEREVENT:
+        #         self.moving_entities.append(Enemy(self, self.player))
+        keys = pg.key.get_pressed()
+        if keys[pg.K_k]: #fix this
+            self.moving_entities.append(Enemy(self, self.player))
+            
         
     def draw(self) -> None :
         self.window.fill(pg.Color(0,0,0)) # BACKGROUND
