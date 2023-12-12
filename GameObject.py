@@ -65,6 +65,7 @@ class MovingObject(GameObject):
         else: return False
         
     def collide(self, obj) -> None:
+        '''Checks collision w obstacles and bounces object'''
         distance : Vec2 = self.position - obj.position
         n = distance.normalize()
         

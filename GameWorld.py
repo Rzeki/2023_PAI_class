@@ -3,6 +3,7 @@ from pygame import Vector2 as Vec2
 from Obstacles import *
 from GameObject import *
 from Enemy import Enemy
+from Bullet import Bullet
 
 
 class GameWorld:
@@ -12,13 +13,7 @@ class GameWorld:
         self.player : MovingObject = player
         
         #container of all the moving entities
-        self.moving_entities : list[Enemy] = [
-            Enemy(self, self.player),
-            Enemy(self, self.player),
-            Enemy(self, self.player),
-            Enemy(self, self.player),
-            Enemy(self, self.player)
-        ]
+        self.moving_entities : list[Enemy] = [Enemy(self, self.player) for _ in range(0,5) ]
         #all circular obstacles
         self.obstacles = [
             Obstacle(window, 700, 300, 50),
@@ -37,28 +32,25 @@ class GameWorld:
             Wall(window, Vec2(self.window_w, self.window_h), Vec2(0, self.window_h)),
             Wall(window, Vec2(0, self.window_h), Vec2(0, 0))
         ]
-        #for pausing motion
-        self.pause : bool = False
-        
-        # for entity in self.moving_entities:
-        #     entity.steering.start_behavior("wander")
-        #     entity.steering.start_behavior("avoid walls")
-        #     entity.steering.start_behavior("avoid obstacles")
-        #     entity.steering.start_behavior("evade")
-        #     entity.steering.start_behavior("hide")
-            
+        #container of bullets
+        self.bullets : list[Bullet] = []
+
     
     def update(self, dt : float) -> None :
-        for entity in self.moving_entities:
-            entity.update(dt)
-            entity.state_machine.update()
-        
         # for event in pg.event.get():
         #     if event.type == pg.USEREVENT:
         #         self.moving_entities.append(Enemy(self, self.player))
         keys = pg.key.get_pressed()
         if keys[pg.K_k]: #fix this
             self.moving_entities.append(Enemy(self, self.player))
+        if keys[pg.K_SPACE]:
+            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction))
+        
+        for entity in self.moving_entities:
+            entity.update(dt)
+            entity.state_machine.update()
+        for bullet in self.bullets:
+            bullet.update(dt)
             
         
     def draw(self) -> None :
@@ -69,3 +61,5 @@ class GameWorld:
             wall.draw()
         for entity in self.moving_entities:
             entity.draw()
+        for bullet in self.bullets:
+            bullet.draw()

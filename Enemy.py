@@ -14,4 +14,6 @@ class Enemy(Vehicle):
         
         self.group_timer = pg.time.get_ticks() + 20000
 
+    # def die(self, enemy_poll : list) -> None:
+    #     enemy_poll.remove(self)
 

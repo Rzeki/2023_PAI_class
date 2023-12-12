@@ -1,5 +1,6 @@
 import pygame as pg
 import util
+
 from GameWorld import GameWorld
 from Player import Player
 
@@ -14,6 +15,7 @@ class Game:
         self.game_world = GameWorld(self.window, self.player)
         
     def run(self) -> None:
+        
         while self.running:
             dt : int = self.clock.tick(180)
             
@@ -32,6 +34,8 @@ class Game:
                 self.player.rotate(-2)
             if keys[pg.K_d]:
                 self.player.rotate(2)
+
+                
                     
             #===================DRAWING=============================        
             self.game_world.draw()
@@ -50,6 +54,8 @@ class Game:
                 self.player.collide(obst)
                 for enemy in self.game_world.moving_entities:
                     enemy.collide(obst)
+                for bullet in self.game_world.bullets:
+                    bullet.collide(obst, self.game_world.bullets)
             
             
             #===================MOVEMENT============================

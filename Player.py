@@ -1,7 +1,9 @@
 import pygame as pg
-from GameObject import *
 from pygame import Vector2 as Vec2
 import util
+
+from GameObject import *
+from Bullet import Bullet
 
 class Player(MovingObject):
     def __init__(self, window : pg.Surface) -> None:
@@ -33,6 +35,6 @@ class Player(MovingObject):
             self.velocity.reflect_ip(n)
             self.direction.reflect_ip(n) 
         
-    
+    # def shoot(self):
         
         
