@@ -17,3 +17,4 @@ class Enemy(Vehicle):
     # def die(self, enemy_poll : list) -> None:
     #     enemy_poll.remove(self)
 
+

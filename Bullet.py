@@ -8,7 +8,7 @@ class Bullet(MovingObject):
     def __init__(self, window: pg.Surface, position : Vec2, direction : Vec2) -> None:
         super().__init__(window)
         
-        self.radius : int = 10
+        self.radius : int = 5
         self.mass : float = 50
         self.position = Vec2(position)
         self.direction = Vec2(direction)    
@@ -26,9 +26,11 @@ class Bullet(MovingObject):
             return True
         else: return False
     
-    def collide(self, obj, bullet_poll : list) -> None:
+    def collide(self, obj, bullet_poll : list) -> bool:
         '''Checks collision w obstacles and disappears bullet'''
         distance : Vec2 = self.position - obj.position
         
         if distance.length() < self.radius + obj.radius:
             bullet_poll.remove(self)
+            return True
+        return False

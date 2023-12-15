@@ -34,21 +34,35 @@ class GameWorld:
         ]
         #container of bullets
         self.bullets : list[Bullet] = []
+        self.can_shoot : bool = True
+        
+        pg.time.set_timer(pg.USEREVENT, 50000)
 
     
     def update(self, dt : float) -> None :
         # for event in pg.event.get():
         #     if event.type == pg.USEREVENT:
         #         self.moving_entities.append(Enemy(self, self.player))
+        for event in pg.event.get(): #TODO: shooting timer
+            if event.type == pg.USEREVENT: 
+                self.can_shoot = True
+        
         keys = pg.key.get_pressed()
         if keys[pg.K_k]: #fix this
             self.moving_entities.append(Enemy(self, self.player))
         if keys[pg.K_SPACE]:
             self.bullets.append(Bullet(self.window, self.player.position, self.player.direction))
+            #SHOTGUN
+            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(5)))
+            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(-5)))
+            self.can_shoot = False
         
         for entity in self.moving_entities:
             entity.update(dt)
             entity.state_machine.update()
+            for bullet in self.bullets:     #enemy dies hit by a bullet
+                if bullet.collide(entity, self.bullets):
+                    self.moving_entities.remove(entity)
         for bullet in self.bullets:
             bullet.update(dt)
             
