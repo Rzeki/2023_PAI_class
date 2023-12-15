@@ -27,14 +27,3 @@ class Player(MovingObject):
     def rotate(self, manuverability : int) -> None:
         self.direction.rotate_ip(manuverability)
         
-    def collide(self, obj : GameObject) -> None:
-        distance : Vec2 = self.position - obj.position
-        n = distance.normalize()
-        
-        if distance.length() < self.radius + obj.radius:
-            self.velocity.reflect_ip(n)
-            self.direction.reflect_ip(n) 
-        
-    # def shoot(self):
-        
-        

@@ -64,7 +64,7 @@ class MovingObject(GameObject):
             return True
         else: return False
         
-    def collide(self, obj) -> None:
+    def collide(self, obj : GameObject) -> bool:
         '''Checks collision w obstacles and bounces object'''
         distance : Vec2 = self.position - obj.position
         n = distance.normalize()
@@ -72,4 +72,6 @@ class MovingObject(GameObject):
         if distance.length() < self.radius + obj.radius:
             self.velocity.reflect_ip(n)
             self.direction.reflect_ip(n) 
+            return True
+        return False
 

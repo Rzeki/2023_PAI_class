@@ -54,6 +54,8 @@ class Game:
                 self.player.collide(obst)
                 for enemy in self.game_world.moving_entities:
                     enemy.collide(obst)
+                    if self.player.collide(enemy):
+                        self.running = False #TODO: Game over
                 for bullet in self.game_world.bullets:
                     bullet.collide(obst, self.game_world.bullets)
             
