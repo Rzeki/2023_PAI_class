@@ -35,8 +35,6 @@ class Vehicle(MovingObject):
             self.direction = self.velocity.normalize()
             self.side = util.vec_perp(self.direction)
             
-            
-                
         
         # for testing
         # wdth, hgth = self.window.get_size()

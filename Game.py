@@ -1,4 +1,5 @@
 import pygame as pg
+import sys
 import util
 
 from GameWorld import GameWorld
@@ -23,6 +24,7 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()    
+                    sys.exit()
 #===========START MENU==================================================
             if not self.running and not self.game_over:
                 self.window.blit(self.start_screen, pg.Vector2(0,0))
@@ -31,9 +33,16 @@ class Game:
                 keys = pg.key.get_pressed()
                 if keys[pg.K_SPACE]:
                     self.running = True
+                elif keys[pg.K_ESCAPE]:
+                    pg.quit()    
+                    sys.exit()
 #===========GAME LOOP====================================================
             elif self.running:
                 self.update()
+                keys = pg.key.get_pressed()
+                if keys[pg.K_ESCAPE]:
+                    pg.quit()    
+                    sys.exit()
 #===========GAME OVER====================================================
             elif self.game_over:
                 self.window.blit(self.end_screen, pg.Vector2(0,0))
@@ -45,6 +54,9 @@ class Game:
                     self.game_world = GameWorld(self.window, self.player)
                     self.running = True
                     self.game_over = False
+                elif keys[pg.K_ESCAPE]:
+                    pg.quit()    
+                    sys.exit()
                 
                 
     def update(self) -> None:
