@@ -34,7 +34,7 @@ class Player(MovingObject):
     def update(self, dt: float) -> None:
         super().update(dt)
         keys = pg.key.get_pressed()
-        if keys[pg.K_w]: #fix this
+        if keys[pg.K_w]:
             self.velocity += pg.Vector2.normalize(self.direction) * self._speed * dt
             self.velocity.x = pg.math.clamp(self.velocity.x, -1, 1)
             self.velocity.y = pg.math.clamp(self.velocity.y, -1, 1)

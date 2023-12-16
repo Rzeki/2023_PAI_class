@@ -8,13 +8,29 @@ from Player import Player
 class Game:
     def __init__(self) -> None:
         pg.init()
-        self.running : bool = True
+        self.running : bool = False
         self.window : pg.Surface = pg.display.set_mode((util.screen_wdth, util.screen_hgth))
         self.player = Player(self.window)
         self.clock = pg.time.Clock()
         self.game_world = GameWorld(self.window, self.player)
         
+        self.start_screen = pg.image.load("assets\start.png")
+        self.end_screen = pg.image.load("assets\over.png")
+        
+    # def start(self) -> None:
+                
+        
     def run(self) -> None:
+        
+        while not self.running:
+            self.window.blit(self.start_screen, pg.Vector2(0,0))
+            keys = pg.key.get_pressed()
+            if keys[pg.K_SPACE]:
+                self.running = True
+            pg.display.update()
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.running = False
         
         while self.running:
             dt : int = self.clock.tick(180)
@@ -22,8 +38,6 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self.running = False
-
-            self.player.update(dt)
                     
             #===================DRAWING=============================        
             self.game_world.draw()
