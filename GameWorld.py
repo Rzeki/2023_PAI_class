@@ -11,7 +11,7 @@ class GameWorld:
         self.window = window
         self.window_w, self.window_h = window.get_size()
         self.player : MovingObject = player
-        self.spawnrate = pg.time.get_ticks() + 3000
+        self.spawnrate = pg.time.get_ticks() + 1000
         
         #container of all the moving entities
         self.moving_entities : list[Enemy] = [Enemy(self, self.player) for _ in range(0,5) ]
@@ -45,18 +45,17 @@ class GameWorld:
             self.can_shoot = True 
             
         if pg.time.get_ticks() > self.spawnrate:
-            self.spawnrate = pg.time.get_ticks() + 3000
+            self.spawnrate = pg.time.get_ticks() + 1000
             self.moving_entities.append(Enemy(self, self.player))
             
-        
-        keys = pg.key.get_pressed()
-        if keys[pg.K_SPACE] and self.can_shoot:
-            self.can_shoot = False
-            self.player.shoot_cooldown = pg.time.get_ticks() + 500
-            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction))
-            #SHOTGUN
-            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(5)))
-            self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(-5)))
+        if pg.mouse.get_pressed()[0]:
+            if self.can_shoot:
+                self.can_shoot = False
+                self.player.shoot_cooldown = pg.time.get_ticks() + 500
+                self.bullets.append(Bullet(self.window, self.player.position, self.player.direction))
+                #SHOTGUN
+                self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(5)))
+                self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(-5)))
         
         for entity in self.moving_entities:
             entity.update(dt)

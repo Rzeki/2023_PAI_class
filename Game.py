@@ -13,6 +13,7 @@ class Game:
         self.player = Player(self.window)
         self.clock = pg.time.Clock()
         self.game_world = GameWorld(self.window, self.player)
+        pg.mouse.set_visible(False)
         
         self.start_screen = pg.image.load("assets\start.png")
         self.end_screen = pg.image.load("assets\over.png")

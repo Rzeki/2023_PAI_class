@@ -70,6 +70,7 @@ class MovingObject(GameObject):
         n = distance.normalize()
         
         if distance.length() < self.radius + obj.radius:
+            self.position += distance.normalize()
             self.velocity.reflect_ip(n)
             self.direction.reflect_ip(n) 
             return True
