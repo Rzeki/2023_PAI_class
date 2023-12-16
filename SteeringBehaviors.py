@@ -60,9 +60,9 @@ class SteeringBehaviors:
         self.avoid_walls_weight : float = 30
         self.separation_weight : float = 20
         self.alignment_weight : float = 0.5
-        self.cohesion_weight : float = 0.4
+        self.cohesion_weight : float = 0.1
         self.interpose_weight : float = 1
-        self.hide_weight : float = 5
+        self.hide_weight : float = 3
     
     def calculate(self) -> Vec2:
         '''Calculate weighted truncated running sum w/ prioritization of currently enabled steering forces'''
@@ -286,8 +286,8 @@ class SteeringBehaviors:
             # again, check !=
             if entity != self.agent and entity.tag and self.steering_force != Vec2(0,0):
                 to_entity : Vec2 = self.agent.position - entity.position
-                
-                steering_force += Vec2.normalize(to_entity)/to_entity.length()
+                if to_entity != Vec2(0,0):
+                    steering_force += Vec2.normalize(to_entity)/to_entity.length()
         
         return steering_force
     

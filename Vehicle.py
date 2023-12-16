@@ -35,15 +35,6 @@ class Vehicle(MovingObject):
             self.direction = self.velocity.normalize()
             self.side = util.vec_perp(self.direction)
             
-            # self.smooth_direction.insert(0, self.direction)
-            # if len(self.smooth_direction) > self.num_last_directions:
-            #     self.smooth_direction.pop()
-            
-            # test = Vec2(0,0)
-            # for v in self.smooth_direction:
-            #     test.x += v.x
-            #     test.y += v.y
-            # self.average_direction = test/len(self.smooth_direction)
             
                 
         
@@ -85,3 +76,12 @@ class Vehicle(MovingObject):
                 counter += 1  
         
         return counter
+    
+    def collide_and_push(self, entity) -> None:
+        '''Checks collision w obstacles and bounces object'''
+        distance : Vec2 = self.position - entity.position
+        
+        if distance.length() < self.radius + entity.radius and distance != Vec2(0,0):
+            entity.position -= distance.normalize()
+    
+    

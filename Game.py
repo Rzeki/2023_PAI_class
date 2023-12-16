@@ -47,9 +47,9 @@ class Game:
             self.player.check_boundaries()
             for enemy in self.game_world.moving_entities:
                 enemy.check_boundaries()
-                # for other_enemy in self.game_world.moving_entities:
-                #     if enemy is not other_enemy:
-                #         enemy.collide(other_enemy)
+                for other_enemy in self.game_world.moving_entities:
+                    if enemy is not other_enemy:
+                        enemy.collide_and_push(other_enemy)
                         
                 
             for obst in self.game_world.obstacles:
