@@ -44,5 +44,11 @@ class Player(MovingObject):
             self.rotate(-1)
         if keys[pg.K_d]:
             self.rotate(1)
+    
+    def reset(self):
+        self.position = pg.Vector2([ z / 2 for z in self.window.get_size() ])
+        self.direction = Vec2(util.dir["UP"])
+        self.velocity = Vec2(util.dir["ZERO"])
+        
 
         
