@@ -52,11 +52,11 @@ class Vehicle(MovingObject):
         # util.wrap_around(self.position, wdth, hgth)
     
     def draw(self) -> None:
-        pg.draw.circle(self.window, pg.Color(255, 0, 0, 100), self.position, self.radius)
         if util.DEBUG:
+            pg.draw.circle(self.window, pg.Color(255, 0, 0, 100), self.position, self.radius)
             pg.draw.line(self.window, pg.Color(0, 0, 255), self.position, self.position + self.velocity*100, 3)
             pg.draw.line(self.window, pg.Color(255, 0, 255), self.position, self.position + self.direction*50, 3)
-            pg.draw.line(self.window, pg.Color(255, 0, 255), self.position, self.position + self.steering.wander_target, 3)
+            # pg.draw.line(self.window, pg.Color(255, 0, 255), self.position, self.position + self.steering.wander_target, 3)
             # pg.draw.circle(self.window, pg.Color(255, 0, 255), 
             #                self.position + self.steering.wander_distance,
             #                self.steering.wander_radius)
