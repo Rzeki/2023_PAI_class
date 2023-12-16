@@ -14,7 +14,7 @@ class Vehicle(MovingObject):
         self.game_world = game_world
         self.mass = 2000
         self.radius = 20
-        self.position = random.choice([Vec2(60,60), Vec2(util.screen_wdth - 60, 60), Vec2(60, util.screen_hgth - 60), Vec2(util.screen_wdth - 60, util.screen_hgth - 60)])
+        self.position = random.choice([Vec2(80,80), Vec2(util.screen_wdth - 80, 80), Vec2(80, util.screen_hgth - 80), Vec2(util.screen_wdth - 80, util.screen_hgth - 80)])
         self.direction = Vec2(util.dir["UP"])
         self.side = Vec2(util.dir["RIGHT"])
         self.steering = SteeringBehaviors(self, player)
