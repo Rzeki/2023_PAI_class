@@ -11,7 +11,7 @@ class Player(MovingObject):
         self.position = pg.Vector2([ z / 2 for z in self.window.get_size() ])
         self.direction = Vec2(util.dir["UP"])
         self.body = pg.image.load("assets\spaceship.png")
-        self._speed = 0.0005 #fix this so its not needed
+        self._speed = 0.0001 #fix this so its not needed
         self.shoot_cooldown = pg.time.get_ticks() + 500
               
     def draw(self) -> None:
