@@ -11,11 +11,18 @@ class Bullet(MovingObject):
         self.radius : int = 5
         self.mass : float = 50
         self.position = Vec2(position)
-        self.direction = Vec2(direction)    
+        self.direction = Vec2(direction)   
+        
+        self.body = pg.image.load("assets\Bomb_02_1.png") 
     
     def update(self, dt: float) -> None:
         self.velocity += pg.Vector2.normalize(self.direction) * dt
         self.position += self.velocity * 0.01 * dt
+    
+    def draw(self) -> None:
+        if util.DEBUG:
+            return super().draw()
+        self.window.blit(self.body, self.position - Vec2(self.radius, self.radius))
     
     def check_boundaries(self, bullet_poll : list) -> bool :
         '''Checks screen bounds and disappears bullet'''

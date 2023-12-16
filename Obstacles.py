@@ -10,8 +10,12 @@ class Obstacle(GameObject):
         self.position = Vec2(x, y)
         self.radius = radius
         
+        self.body = pg.image.load("assets\Rock6.png")
+        
     def draw(self) -> None:
-        pg.draw.circle(self.window, pg.Color(0, 0, 255), self.position, self.radius)   
+        if util.DEBUG:
+            pg.draw.circle(self.window, pg.Color(0, 0, 255), self.position, self.radius)
+        self.window.blit(self.body, self.position-Vec2(self.radius, self.radius))   
 
 
  

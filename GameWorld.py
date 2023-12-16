@@ -59,7 +59,7 @@ class GameWorld:
             entity.update(dt)
             entity.state_machine.update()
             for bullet in self.bullets:     #enemy dies hit by a bullet
-                if bullet.collide(entity, self.bullets):
+                if bullet.collide(entity, self.bullets) and (entity in self.moving_entities):
                     self.moving_entities.remove(entity)
         for bullet in self.bullets:
             bullet.update(dt)
