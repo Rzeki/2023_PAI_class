@@ -23,19 +23,7 @@ class Game:
                 if event.type == pg.QUIT:
                     self.running = False
 
-            keys = pg.key.get_pressed()
-            if keys[pg.K_w]: #fix this
-                self.player.velocity += pg.Vector2.normalize(self.player.direction) * self.player._speed * dt
-                self.player.velocity.x = pg.math.clamp(self.player.velocity.x, -1, 1)
-                self.player.velocity.y = pg.math.clamp(self.player.velocity.y, -1, 1)
-            if keys[pg.K_s]:
-                self.player.velocity = pg.Vector2(0,0)
-            if keys[pg.K_a]:
-                self.player.rotate(-2)
-            if keys[pg.K_d]:
-                self.player.rotate(2)
-
-                
+            self.player.update(dt)
                     
             #===================DRAWING=============================        
             self.game_world.draw()

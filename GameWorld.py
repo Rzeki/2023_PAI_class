@@ -40,22 +40,20 @@ class GameWorld:
 
     
     def update(self, dt : float) -> None :
-        # for event in pg.event.get():
-        #     if event.type == pg.USEREVENT:
-        #         self.moving_entities.append(Enemy(self, self.player))
-        for event in pg.event.get(): #TODO: shooting timer
-            if event.type == pg.USEREVENT: 
-                self.can_shoot = True
+        
+        if pg.time.get_ticks() > self.player.shoot_cooldown:
+            self.can_shoot = True 
         
         keys = pg.key.get_pressed()
         if keys[pg.K_k]: #fix this
             self.moving_entities.append(Enemy(self, self.player))
-        if keys[pg.K_SPACE]:
+        if keys[pg.K_SPACE] and self.can_shoot:
+            self.can_shoot = False
+            self.player.shoot_cooldown = pg.time.get_ticks() + 500
             self.bullets.append(Bullet(self.window, self.player.position, self.player.direction))
             #SHOTGUN
             self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(5)))
             self.bullets.append(Bullet(self.window, self.player.position, self.player.direction.rotate(-5)))
-            self.can_shoot = False
         
         for entity in self.moving_entities:
             entity.update(dt)
