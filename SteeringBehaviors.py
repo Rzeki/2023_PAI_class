@@ -25,11 +25,11 @@ class SteeringBehaviors:
         self.wander_target : Vec2 = Vec2(self.wander_radius*math.cos(math.pi*2), self.wander_radius*math.sin(math.pi*2))
 
         #for obstacle detection
-        self.min_detection_box_len : float = 70
+        self.min_detection_box_len : float = 80
         
         #for wall detection
         self.agent_feelers : [Vec2] = [Vec2(0.0), Vec2(0.0), Vec2(0.0)]
-        self.feeler_length : float = 80
+        self.feeler_length : float = 100
         
         #agent's final steering force
         self.steering_force : Vec2 = Vec2(0, 0)
@@ -284,7 +284,7 @@ class SteeringBehaviors:
         
         for entity in neighbors:
             # again, check !=
-            if entity != self.agent and entity.tag:
+            if entity != self.agent and entity.tag and self.steering_force != Vec2(0,0):
                 to_entity : Vec2 = self.agent.position - entity.position
                 
                 steering_force += Vec2.normalize(to_entity)/to_entity.length()

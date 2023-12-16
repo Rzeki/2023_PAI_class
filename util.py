@@ -1,7 +1,7 @@
 import random
 from pygame import Vector2 as Vec2
 
-DEBUG : bool = False
+DEBUG : bool = True
 screen_wdth, screen_hgth = 1920, 1080
 
 MaxFloat : float = 99999

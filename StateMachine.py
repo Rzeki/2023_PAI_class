@@ -23,6 +23,7 @@ class StartState(State):
     def enter_state(self, agent) -> None:
         agent.steering.start_behavior("avoid obstacles")
         agent.steering.start_behavior("avoid walls")
+        agent.steering.start_behavior("separation")
 
         pass
     
@@ -128,10 +129,7 @@ class Group(State):
         agent.steering.start_behavior("hide")
     
     
-    def execute_state(self, agent) -> None:
-        # if pg.time.get_ticks() > agent.group_timer:   
-        #     agent.state_machine.change_state(Pursuit())
-        
+    def execute_state(self, agent) -> None:   
         if agent.count_neighbors() > 2:
             agent.state_machine.change_state(Pursuit())
         
@@ -167,9 +165,9 @@ class StateMachine:
             self._current_state.execute_state(self._owner)
             
             
-        keys = pg.key.get_pressed()
-        if keys[pg.K_n]: #fix this
-            self.change_state(Pursuit())
+        # keys = pg.key.get_pressed()
+        # if keys[pg.K_n]: #fix this
+        #     self.change_state(Pursuit())
             
         
             
