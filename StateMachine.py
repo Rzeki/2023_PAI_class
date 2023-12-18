@@ -90,7 +90,7 @@ class Evade(State):
     def execute_state(self, agent) -> None:
         if agent.steering.player.position.distance_to(agent.position) > agent.steering.panic_distance:
             if util.DEBUG:
-                agent.body.fill((51, 102, 255, 255), special_flags=pg.BLEND_RGBA_MULT)
+                agent.body.fill((255, 255, 255, 255))
             agent.state_machine.change_state(Group())
         
         pass
@@ -111,10 +111,11 @@ class Wander(State):
         if agent.steering.player.position.distance_to(agent.position) < agent.steering.evade_distance:
             agent.group_timer = pg.time.get_ticks() + 10000
             agent.state_machine.change_state(Evade())
+            
      
         if pg.time.get_ticks() > agent.group_timer:
             if util.DEBUG:
-                agent.body.fill((51, 102, 255, 255), special_flags=pg.BLEND_RGBA_MULT)
+                agent.body.fill((255, 255, 255, 255))
             agent.state_machine.change_state(Group())
             
     def exit_state(self, agent) -> None:
@@ -140,14 +141,16 @@ class Group(State):
             if not neighbour.state_machine.is_in_state("Group"):
                 neighbours.remove(neighbour)
         
+        clr = (random.randint(0,255),random.randint(0,255),random.randint(0,255),255)
+        
         if len(neighbours) >= 3: 
             for neighbour in neighbours:      
                 if util.DEBUG:
-                    neighbour.body.fill((102, 255, 51, 255), special_flags=pg.BLEND_RGBA_MULT)
+                    neighbour.body.fill(clr)
                 neighbour.state_machine.change_state(Pursuit())
         
             if util.DEBUG:
-                agent.body.fill((102, 255, 51, 255), special_flags=pg.BLEND_RGBA_MULT)
+                agent.body.fill(clr)
             agent.state_machine.change_state(Pursuit())
         
     
