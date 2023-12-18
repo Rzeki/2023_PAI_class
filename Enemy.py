@@ -10,6 +10,7 @@ class Enemy(Vehicle):
         super().__init__(game_world, player)
         
         self.body = pg.image.load("assets\Bomb_03.png")
+        self.body.convert_alpha()
         
         self.state_machine = StateMachine(self)
         self.state_machine.change_state(StartState())

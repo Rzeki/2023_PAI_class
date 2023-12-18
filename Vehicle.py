@@ -62,18 +62,18 @@ class Vehicle(MovingObject):
             if entity is not self and to_entity.length_squared() < range*range:
                 entity.tag = True
                 
-    def count_neighbors(self) -> int:
-        '''count other agents within radius'''
-        counter = 0
+    def get_neighbors(self):
+        '''get other agents within radius'''
+        table = []
         for entity in self.game_world.moving_entities:
             entity.tag = False      
             to_entity : Vec2 = entity.position - self.position
             range : float = self.neighborhood_radius + entity.radius
             #check if != works
             if entity is not self and to_entity.length_squared() < range*range:
-                counter += 1  
+                table.append(entity)
         
-        return counter
+        return table
     
     def collide_and_push(self, entity) -> None:
         '''Checks collision w obstacles and bounces object'''

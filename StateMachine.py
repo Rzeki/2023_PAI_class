@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame import Vector2 as Vec2
 import random
+import util
             
 
 class State:
@@ -88,6 +89,8 @@ class Evade(State):
     
     def execute_state(self, agent) -> None:
         if agent.steering.player.position.distance_to(agent.position) > agent.steering.panic_distance:
+            if util.DEBUG:
+                agent.body.fill((51, 102, 255, 255), special_flags=pg.BLEND_RGBA_MULT)
             agent.state_machine.change_state(Group())
         
         pass
@@ -105,11 +108,13 @@ class Wander(State):
         pass
     
     def execute_state(self, agent) -> None:
-        if agent.steering.player.position.distance_to(agent.position) < agent.steering.panic_distance:
-            agent.group_timer = pg.time.get_ticks() + 20000
+        if agent.steering.player.position.distance_to(agent.position) < agent.steering.evade_distance:
+            agent.group_timer = pg.time.get_ticks() + 10000
             agent.state_machine.change_state(Evade())
      
         if pg.time.get_ticks() > agent.group_timer:
+            if util.DEBUG:
+                agent.body.fill((51, 102, 255, 255), special_flags=pg.BLEND_RGBA_MULT)
             agent.state_machine.change_state(Group())
             
     def exit_state(self, agent) -> None:
@@ -122,15 +127,27 @@ class Group(State):
         pass
     
     def enter_state(self, agent) -> None:
-        agent.group_timer = pg.time.get_ticks() + 20000
+        agent.group_timer = pg.time.get_ticks() + 10000
         agent.steering.start_behavior("separation")
         agent.steering.start_behavior("alignment")
         agent.steering.start_behavior("cohesion")
         agent.steering.start_behavior("hide")
     
     
-    def execute_state(self, agent) -> None:   
-        if agent.count_neighbors() > 2:
+    def execute_state(self, agent) -> None: 
+        neighbours: list = agent.get_neighbors()  
+        for neighbour in neighbours:
+            if not neighbour.state_machine.is_in_state("Group"):
+                neighbours.remove(neighbour)
+        
+        if len(neighbours) >= 3: 
+            for neighbour in neighbours:      
+                if util.DEBUG:
+                    neighbour.body.fill((102, 255, 51, 255), special_flags=pg.BLEND_RGBA_MULT)
+                neighbour.state_machine.change_state(Pursuit())
+        
+            if util.DEBUG:
+                agent.body.fill((102, 255, 51, 255), special_flags=pg.BLEND_RGBA_MULT)
             agent.state_machine.change_state(Pursuit())
         
     
@@ -182,8 +199,8 @@ class StateMachine:
     def revert_to_previous_state(self) -> None :
         self.change_state(self._previous_state)
     
-    def is_in_state(self, query_state : State) -> bool :
-        if query_state == self._current_state:
+    def is_in_state(self, query_state : str) -> bool :
+        if query_state == self._current_state.__class__.__name__:
             return True
         else : return False
 

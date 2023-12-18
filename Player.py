@@ -31,7 +31,7 @@ class Player(MovingObject):
         
         
         if util.DEBUG:
-            pg.draw.line(self.window, pg.Color(0, 0, 255), self.position, self.position + self.velocity*100, 3)
+            pg.draw.line(self.window, pg.Color(0, 0, 255), self.position, self.position + self.velocity * 100, 3)
             pg.draw.line(self.window, pg.Color(255, 0, 255), self.position, self.position + self.direction * 50, 3)
         
     # def rotate(self, manuverability : int) -> None:

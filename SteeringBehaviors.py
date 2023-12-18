@@ -17,6 +17,7 @@ class SteeringBehaviors:
         
         #for flee
         self.panic_distance : float = 600
+        self.evade_distance : float = 300
         
         #for wander
         self.wander_radius : float = 10
@@ -159,7 +160,7 @@ class SteeringBehaviors:
     def flee(self, target : Vec2) -> Vec2:
         '''Flee if the target position is within panic distance.'''
         
-        if(self.agent.position.distance_squared_to(target) > self.panic_distance*self.panic_distance) :
+        if(self.agent.position.distance_squared_to(target) > self.panic_distance**2) :
             return Vec2(0, 0)
         else :
             new_velocity : Vec2 = (self.agent.position - target)*self.agent.max_speed
