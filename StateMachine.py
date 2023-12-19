@@ -110,6 +110,8 @@ class Wander(State):
     def execute_state(self, agent) -> None:
         if agent.steering.player.position.distance_to(agent.position) < agent.steering.evade_distance:
             agent.group_timer = pg.time.get_ticks() + 10000
+            if util.DEBUG:
+                agent.body.fill((170, 170, 170, 255))
             agent.state_machine.change_state(Evade())
             
      
