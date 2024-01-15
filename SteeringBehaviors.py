@@ -16,7 +16,7 @@ class SteeringBehaviors:
         self.world_point : Vec2 = None
         
         #for flee
-        self.panic_distance : float = 600
+        self.panic_distance : float = 300
         self.evade_distance : float = 300
         
         #for wander

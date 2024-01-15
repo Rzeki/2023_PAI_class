@@ -25,6 +25,8 @@ class StartState(State):
         agent.steering.start_behavior("avoid obstacles")
         agent.steering.start_behavior("avoid walls")
         agent.steering.start_behavior("separation")
+        agent.steering.start_behavior("evade")
+        
 
         pass
     
@@ -54,10 +56,32 @@ class Hide(State):
         pass
     
     def enter_state(self, agent) -> None:
+        if util.DEBUG:
+            agent.body.fill((255,0,0,255))
         agent.steering.start_behavior("hide")
         pass
     
     def execute_state(self, agent) -> None:
+        if pg.time.get_ticks() > agent._time:
+            agent._time = pg.time.get_ticks() + random.randint(3000,6000)
+            agent.state_machine.change_state(Wander())
+        
+        neighbours: list = agent.get_neighbors()  
+        # for neighbour in neighbours:
+        #     if not neighbour.state_machine.is_in_state("Wander") or not neighbour.state_machine.is_in_state("Hide"):
+        #         neighbours.remove(neighbour)
+        
+        clr = (255,255,255,255)
+        
+        if len(neighbours) >= 3:  
+            for neighbour in neighbours:      
+                if util.DEBUG:
+                    neighbour.body.fill(clr)
+                neighbour.state_machine.change_state(Pursuit())
+            
+            if util.DEBUG:
+                agent.body.fill(clr)
+            agent.state_machine.change_state(Pursuit())
         pass
     
     def exit_state(self, agent) -> None:
@@ -69,7 +93,10 @@ class Pursuit(State):
         pass
     
     def enter_state(self, agent) -> None:
+        agent.steering.start_behavior("alignment")
+        agent.steering.start_behavior("cohesion")
         agent.steering.start_behavior("pursuit")
+        agent.steering.end_behavior("evade")
         pass
     
     def execute_state(self, agent) -> None:
@@ -79,25 +106,25 @@ class Pursuit(State):
         agent.steering.end_behavior("pursuit")
         pass
     
-class Evade(State):
-    def __init__(self) -> None:
-        pass
+# class Evade(State):
+#     def __init__(self) -> None:
+#         pass
     
-    def enter_state(self, agent) -> None:
-        agent.steering.start_behavior("evade")
-        pass
+#     def enter_state(self, agent) -> None:
+#         agent.steering.start_behavior("evade")
+#         pass
     
-    def execute_state(self, agent) -> None:
-        if agent.steering.player.position.distance_to(agent.position) > agent.steering.panic_distance:
-            if util.DEBUG:
-                agent.body.fill((255, 255, 255, 255))
-            agent.state_machine.change_state(Group())
+#     def execute_state(self, agent) -> None:
+#         if agent.steering.player.position.distance_to(agent.position) > agent.steering.panic_distance:
+#             if util.DEBUG:
+#                 agent.body.fill((255, 255, 255, 255))
+#             agent.state_machine.change_state(Group())
         
-        pass
+#         pass
     
-    def exit_state(self, agent) -> None:
-        agent.steering.end_behavior("evade")
-        pass
+#     def exit_state(self, agent) -> None:
+#         agent.steering.end_behavior("evade")
+#         pass
     
 class Wander(State):
     def __init__(self) -> None:
@@ -105,60 +132,67 @@ class Wander(State):
     
     def enter_state(self, agent) -> None:
         agent.steering.start_behavior("wander")
+        if util.DEBUG:
+            agent.body.fill((0,255,0,255))
         pass
     
     def execute_state(self, agent) -> None:
-        if agent.steering.player.position.distance_to(agent.position) < agent.steering.evade_distance:
-            agent.group_timer = pg.time.get_ticks() + 10000
-            if util.DEBUG:
-                agent.body.fill((170, 170, 170, 255))
-            agent.state_machine.change_state(Evade())
+        if pg.time.get_ticks() > agent._time:
+            agent._time = pg.time.get_ticks() + random.randint(3000,6000)
+            agent.state_machine.change_state(Hide())
+        
+        neighbours: list = agent.get_neighbors()  
+        # for neighbour in neighbours:
+        #     if not neighbour.state_machine.is_in_state("Wander") or not neighbour.state_machine.is_in_state("Hide"):
+        #         neighbours.remove(neighbour)
+        
+        clr = (255,255,255,255)
+        
+        if len(neighbours) >= 3:  
+            for neighbour in neighbours:      
+                if util.DEBUG:
+                    neighbour.body.fill(clr)
+                neighbour.state_machine.change_state(Pursuit())
             
-     
-        if pg.time.get_ticks() > agent.group_timer:
             if util.DEBUG:
-                agent.body.fill((255, 255, 255, 255))
-            agent.state_machine.change_state(Group())
+                agent.body.fill(clr)
+            agent.state_machine.change_state(Pursuit())
             
     def exit_state(self, agent) -> None:
         agent.steering.end_behavior("wander")
         pass
     
     
-class Group(State):
-    def __init__(self) -> None:   
-        pass
+# class Group(State):
+#     def __init__(self) -> None:   
+#         pass
     
-    def enter_state(self, agent) -> None:
-        agent.group_timer = pg.time.get_ticks() + 10000
-        agent.steering.start_behavior("separation")
-        agent.steering.start_behavior("alignment")
-        agent.steering.start_behavior("cohesion")
-        agent.steering.start_behavior("hide")
+#     def enter_state(self, agent) -> None:
+#         pass
     
     
-    def execute_state(self, agent) -> None: 
-        neighbours: list = agent.get_neighbors()  
-        for neighbour in neighbours:
-            if not neighbour.state_machine.is_in_state("Group"):
-                neighbours.remove(neighbour)
+#     def execute_state(self, agent) -> None: 
+#         neighbours: list = agent.get_neighbors()  
+#         for neighbour in neighbours:
+#             if not neighbour.state_machine.is_in_state("Group"):
+#                 neighbours.remove(neighbour)
         
-        clr = (random.randint(0,255),random.randint(0,255),random.randint(0,255),255)
+#         clr = (random.randint(0,255),random.randint(0,255),random.randint(0,255),255)
         
-        if len(neighbours) >= 3: 
-            for neighbour in neighbours:      
-                if util.DEBUG:
-                    neighbour.body.fill(clr)
-                neighbour.state_machine.change_state(Pursuit())
+#         if len(neighbours) >= 3:  
+#             for neighbour in neighbours:      
+#                 if util.DEBUG:
+#                     neighbour.body.fill(clr)
+#                 neighbour.state_machine.change_state(Pursuit())
         
-            if util.DEBUG:
-                agent.body.fill(clr)
-            agent.state_machine.change_state(Pursuit())
+#             if util.DEBUG:
+#                 agent.body.fill(clr)
+#             agent.state_machine.change_state(Pursuit())
         
     
-    def exit_state(self, agent) -> None:
-        agent.steering.end_behavior("hide")
-        pass
+#     def exit_state(self, agent) -> None:
+#         agent.steering.end_behavior("hide")
+#         pass
 
 #=====================STATE MACHINE================================================================================
 

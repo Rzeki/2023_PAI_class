@@ -14,7 +14,7 @@ class Player(MovingObject):
         self.crosshair = pg.image.load("assets\crosshair.png")
         self.cursor_img_rect = self.crosshair.get_rect()
         self._speed = 0.0001 #fix this so its not needed
-        self.shoot_cooldown = pg.time.get_ticks() + 500
+        self.shoot_cooldown = pg.time.get_ticks() + 50
         self.mouse_distance = pg.mouse.get_pos() - self.position
               
     def draw(self) -> None:

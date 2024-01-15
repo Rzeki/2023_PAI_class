@@ -15,7 +15,7 @@ class Enemy(Vehicle):
         self.state_machine = StateMachine(self)
         self.state_machine.change_state(StartState())
         
-        self.group_timer = pg.time.get_ticks() + 20000
+        self._time = pg.time.get_ticks() + random.randint(3000,6000)
     
     def draw(self) -> None:
         if util.DEBUG:
